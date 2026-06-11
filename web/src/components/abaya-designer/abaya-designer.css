@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.cinematic-preview {
+  background: linear-gradient(165deg, #9aa0aa 0%, #6e7480 45%, #525862 100%);
+}
+
+.cinematic-preview__vignette {
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.22) 100%);
+}
+
+.cinematic-preview__grain {
+  display: none;
+}
+
+.abaya-designer-module {
+  font-family: Outfit, Tajawal, system-ui, sans-serif;
+  color: #1a1a1e;
+  -webkit-font-smoothing: antialiased;
+}
+
+.abaya-designer-module * {
+  box-sizing: border-box;
+}
+
+@media print {
+  .abaya-designer-module .ad-no-print {
+    display: none !important;
+  }
+  .abaya-designer-module .ad-print-only {
+    display: block !important;
+  }
+}
+
+.abaya-designer-module .ad-print-only {
+  display: none;
+}

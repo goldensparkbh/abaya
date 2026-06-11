@@ -1,0 +1,113 @@
+*{
+    padding: 0;
+    margin: 0;
+}
+
+
+.navbar-brand
+{
+  font-size: 2rem;
+}
+
+
+.my-section img {
+  height: 300px;
+  object-fit: contain;
+  padding-top:20px;
+}
+
+.cart-img{
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+}
+.btn-Checkout{
+  background: #949a88;
+  color:#fff ;
+  width: 120px;
+  height: 40px;
+}
+
+.btn-Checkout:hover{
+  background: #e5a394;
+  color: black;
+}
+
+.btn-Payment{
+  background: #949a88;
+  color:#fff ;
+  width: 200px;
+  height: 40px;
+}
+
+.btn-Payment:hover{
+  background: #e5a394;
+  color: black;
+}
+
+.cart-header-tb{
+  color: #8a917e;
+  font-weight: bold;
+}
+.product_name{
+  font-size: 16px;
+  font-weight: bold;
+}
+.product_name:hover{
+  color: #8a917e !important;
+}
+.business_name{
+  margin: 0;
+  font-size: 15px;
+  color: black;
+}
+.price_class{
+  color: #990808;; 
+  margin: 0;
+}
+
+.btn-update{
+  width: 150px;
+  height: 45px;
+  background: #85aeb0;
+}
+.btn-update:hover{
+  background: #fff;
+  border: 2px solid black;
+  cursor: pointer;
+  color: #626659;
+}
+.btn-close{
+  width: 150px;
+  height: 45px;
+  border: 2px solid black;
+  cursor: pointer;
+  border-color: #85aeb0;
+  color: #85aeb0;
+}
+
+.btn-close:hover{
+  color: #626659;
+  border-color: #626659;
+
+}
+
+.btn-delete{
+  width: 150px;
+  height: 45px;
+}
+
+.btn-status{
+  width: 150px;
+  height: 45px;  
+}
+.btn-lg{
+  width: 250px;
+}
+
+.btn-dashboard{
+  width: 320px;
+}
+
+
+

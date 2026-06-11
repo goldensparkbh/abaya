@@ -1,0 +1,158 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function profile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function hasRole(r) {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && profile().role == r;
+    }
+
+    function isShop() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && (profile().role == 'shop' || profile().role == 'business');
+    }
+
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    // User profiles
+    match /users/{uid} {
+      allow read: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+      allow create, update: if isSignedIn() && (request.auth.uid == uid || isAdmin());
+      allow delete: if false;
+    }
+
+    // Shop profiles
+    match /shops/{shopId} {
+      allow read: if true;
+      allow create: if isAdmin()
+        || (isSignedIn() && request.auth.uid == shopId && isShop());
+      allow update: if isAdmin() || (isSignedIn() && request.auth.uid == shopId && isShop());
+      allow delete: if isAdmin();
+    }
+
+    // Product catalog
+    match /products/{productId} {
+      allow read: if true;
+      allow create: if isShop() && request.resource.data.shopId == request.auth.uid;
+      allow update, delete: if isAdmin() || (isShop() && resource.data.shopId == request.auth.uid);
+    }
+
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Orders (shop purchases + custom designs)
+    match /orders/{orderId} {
+      allow read: if isSignedIn() && (
+        resource.data.customerId == request.auth.uid
+        || isAdmin()
+        || (isShop() && resource.data.type == 'product' && resource.data.items != null)
+      );
+      allow create: if isSignedIn() && request.resource.data.customerId == request.auth.uid;
+      allow update: if isAdmin()
+        || (isSignedIn() && resource.data.customerId == request.auth.uid)
+        || isShop();
+      allow delete: if isAdmin();
+    }
+
+    match /platformSettings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /paymentSettings/{docId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /materials/{materialId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /colors/{colorId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /abayaModels/{modelId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    match /emailTemplates/{templateId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    match /whatsappTemplates/{templateId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Notification queue (admin read; system write on checkout)
+    match /notificationQueue/{jobId} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn();
+      allow update: if isAdmin();
+    }
+
+    match /paymentLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isSignedIn();
+    }
+
+    // Legacy bidding (kept for existing data)
+    match /requests/{requestId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.customerId == request.auth.uid;
+      allow update: if isSignedIn() && (
+        resource.data.customerId == request.auth.uid
+        || isAdmin()
+        || (isShop() && resource.data.awardedShopId == request.auth.uid)
+      );
+      allow delete: if isSignedIn()
+        && resource.data.customerId == request.auth.uid
+        && resource.data.status == 'open';
+
+      match /bids/{bidId} {
+        allow read: if isSignedIn();
+        allow create: if isShop() && request.resource.data.shopId == request.auth.uid;
+        allow update: if isSignedIn();
+        allow delete: if isSignedIn() && resource.data.shopId == request.auth.uid;
+      }
+
+      match /messages/{messageId} {
+        allow read, create: if isSignedIn();
+      }
+
+      match /events/{eventId} {
+        allow read, create: if isSignedIn();
+      }
+
+      match /payment/{paymentId} {
+        allow read: if isSignedIn();
+        allow create, update: if isSignedIn() || isAdmin();
+      }
+
+      match /disputes/{disputeId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn();
+        allow update: if isAdmin();
+      }
+    }
+  }
+}

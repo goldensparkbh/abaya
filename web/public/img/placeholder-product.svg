@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" fill="none">
+  <rect width="400" height="480" fill="#e8ecea"/>
+  <path d="M200 80 L150 110 L130 160 L115 320 L110 400 L290 400 L285 320 L270 160 L250 110 Z" fill="#d5ddd9" stroke="#2f4f4f" stroke-width="2" opacity="0.6"/>
+  <text x="200" y="440" text-anchor="middle" font-family="Outfit,sans-serif" font-size="14" fill="#5c6563">Abaya</text>
+</svg>
